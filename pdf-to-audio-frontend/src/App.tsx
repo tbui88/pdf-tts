@@ -26,41 +26,42 @@ function App() {
   });
 
   // ⬇️ main handler
-  const handleFileUpload = async (file: File) => {
-    // show initial uploading state
+ const handleFileUpload = async (file: File) => {
+  console.log("⏩ handleFileUpload fired with:", file.name); // LOG ①
+
+  setConversionState({
+    status: 'uploading',
+    fileName: file.name,
+    duration: null,
+    audioUrl: null,
+    error: null,
+  });
+
+  try {
+    console.log("🌍 BASE =", import.meta.env.VITE_API_BASE_URL); // LOG ②
+
+    const { audio_url } = await uploadPdf(file);
+    console.log("✅ backend returned:", audio_url); // LOG ③
+
     setConversionState({
-      status: "uploading",
-      progress: 0,
-      message: "Uploading PDF…",
+      status: 'success',
       fileName: file.name,
+      duration: null,
+      audioUrl: audio_url,
+      error: null,
     });
+  } catch (error) {
+    console.error("❌ Upload failed:", error);
+    setConversionState({
+      status: 'error',
+      fileName: file.name,
+      duration: null,
+      audioUrl: null,
+      error: 'Conversion failed. Please try again.',
+    });
+  }
+};
 
-    try {
-      // 🔗 send to backend
-      const { audio_url, estimated_duration } = await uploadPdf(file);
-
-      // success UI
-      setConversionState({
-        status: "completed",
-        progress: 100,
-        message: "Conversion completed successfully!",
-        fileName: file.name,
-        audioUrl: audio_url,
-        estimatedDuration: estimated_duration,
-      });
-      toast.success("PDF converted to audio successfully!");
-    } catch (err: any) {
-      console.error(err);
-      setConversionState({
-        status: "error",
-        progress: 0,
-        message:
-          err?.message ?? "An error occurred during conversion. Please try again.",
-        fileName: file.name,
-      });
-      toast.error("Failed to convert PDF to audio");
-    }
-  };
 
   const handleReset = () => {
     setConversionState({
