@@ -1,0 +1,5 @@
+# Create a new git repository or use existing
+git init
+git add .
+git commit -m "Initial commit"
+git push origin main
