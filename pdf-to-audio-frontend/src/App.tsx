@@ -44,7 +44,7 @@ function App() {
     console.log("✅ backend returned:", audio_url); // LOG ③
 
     setConversionState({
-      status: 'success',
+      status: 'completed',
       fileName: file.name,
       duration: null,
       audioUrl: audio_url,
