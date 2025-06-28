@@ -9,11 +9,15 @@ interface FileUploaderProps {
 
 export const FileUploader: React.FC<FileUploaderProps> = ({ onFileUpload }) => {
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    if (acceptedFiles.length > 0) {
-      const file = acceptedFiles[0]
-      onFileUpload(file)
-    }
-  }, [onFileUpload])
+  console.log("📥 File dropped:", acceptedFiles); // ✅ NEW LOG
+
+  if (acceptedFiles.length > 0) {
+    const file = acceptedFiles[0];
+    console.log("📨 Calling onFileUpload with:", file.name); // ✅ NEW LOG
+    onFileUpload(file);
+  }
+}, [onFileUpload]);
+
 
   const {
     getRootProps,
